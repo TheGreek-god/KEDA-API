@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+# ---
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: keda
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: influxdb
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: performance-test 
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: api-app

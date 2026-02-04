@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myidentity-api
+  namespace: api-app
+  labels:
+    app: myidentity-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myidentity-api
+  template:
+    metadata:
+      labels:
+        app: myidentity-api
+    spec:
+      containers:
+        - name: myidentity
+          image: greekgod659/myidentity-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4000
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: myidentity-service
+  namespace: api-app
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "4000"
+    prometheus.io/path: "/metrics"
+    prometheus.io/service-name: "myidentity-service.api-app"
+    prometheus.io/target: "myidentity-service.api-app.svc.cluster.local:4000"
+
+spec:
+  type: NodePort
+  selector:
+    app: myidentity-api
+  ports:
+    - port: 4000
+      targetPort: 4000
+      protocol: TCP
+      name: http

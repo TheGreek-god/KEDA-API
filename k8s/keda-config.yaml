@@ -1,0 +1,85 @@
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: keda-operator
+#   namespace: keda
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: keda-operator
+#   template:
+#     metadata:
+#       labels:
+#         app: keda-operator
+#     spec:
+#       serviceAccountName: keda-operator
+#       containers:
+#       - name: keda
+#         image: ghcr.io/kedacore/keda:2.11.1
+#         imagePullPolicy: IfNotPresent
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: keda-metrics-apiserver
+#   namespace: keda
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: keda-metrics-apiserver
+#   template:
+#     metadata:
+#       labels:
+#         app: keda-metrics-apiserver
+#     spec:
+#       serviceAccountName: keda-operator
+#       containers:
+#       - name: keda-metrics-apiserver
+#         image: ghcr.io/kedacore/keda-metrics-apiserver:2.11.1
+#         imagePullPolicy: IfNotPresent
+# ---
+# apiVersion: v1
+# kind: ServiceAccount
+# metadata:
+#   name: keda-operator
+#   namespace: keda
+# ---
+# apiVersion: rbac.authorization.k8s.io/v1
+# kind: ClusterRoleBinding
+# metadata:
+#   name: keda-operator
+# roleRef:
+#   apiGroup: rbac.authorization.k8s.io
+#   kind: ClusterRole
+#   name: cluster-admin
+# subjects:
+#   - kind: ServiceAccount
+#     name: keda-operator
+#     namespace: keda
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: keda-operator
+#   namespace: keda
+# spec:
+#   ports:
+#   - port: 9666
+#     targetPort: 9666
+#   selector:
+#     app: keda-operator
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: keda-metrics-apiserver
+#   namespace: keda
+# spec:
+#   ports:
+#   - port: 443
+#     targetPort: 6443
+#   selector:
+#     app: keda-metrics-apiserver

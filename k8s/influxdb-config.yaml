@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: influxdb
+  namespace: influxdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influxdb
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      containers:
+      - name: influxdb
+        image: influxdb:1.8
+        env:
+        - name: INFLUXDB_DB
+          value: "k6"
+        ports:
+        - containerPort: 8086
+          name: http
+        volumeMounts:
+        - name: influxdb-storage
+          mountPath: /var/lib/influxdb
+      volumes:
+      - name: influxdb-storage
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: influxdb-service
+  namespace: influxdb
+spec:
+  type: NodePort
+  ports:
+  - port: 8086
+    targetPort: 8086
+    nodePort: 30003
+  selector:
+    app: influxdb
