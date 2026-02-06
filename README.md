@@ -1272,3 +1272,21 @@ kubectl get services -A
 kubectl get pods -n api-app -w
 kubectl get hpa -n api-app -w
 ```
+## 🧹 Cleanup
+
+```bash
+# Delete everything
+kubectl delete -f k8s/ --ignore-not-found
+kubectl delete -f deploy/ --ignore-not-found
+kubectl delete -f keda/ --ignore-not-found
+
+# Delete KEDA
+kubectl delete -f https://github.com/kedacore/keda/releases/download/v2.10.1/keda-2.10.1.yaml --ignore-not-found
+
+# Delete namespaces
+kubectl delete namespace monitoring influxdb keda api-app performance-test --ignore-not-found
+
+# Stop Minikube
+minikube stop
+minikube delete
+```
