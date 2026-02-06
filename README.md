@@ -1255,3 +1255,20 @@ Create a new dashboard in Grafana by importing the **My-Identity Metrics Dashboa
 }
 ```
 
+## ✅ Verification Commands
+
+```bash
+# Check all components
+kubectl get pods -A
+
+# Check autoscaling status
+kubectl get scaledobject -A
+kubectl get hpa -A
+
+# Check services
+kubectl get services -A
+
+# Monitor scaling in real-time
+kubectl get pods -n api-app -w
+kubectl get hpa -n api-app -w
+```
