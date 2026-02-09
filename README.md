@@ -1255,6 +1255,15 @@ Create a new dashboard in Grafana by importing the **My-Identity Metrics Dashboa
 }
 ```
 
+### Delete the existing job: 
+If you want to completely restart the job (delete the previous one and start fresh), you can delete the job and then apply it again: 
+```bash
+kubectl delete job k6-loadtest -n performance-test 
+```
+Reapply the job configuration: After deleting the job, reapply the job YAML to create a new job: 
+```bash
+kubectl apply -f k8s/k6-job.yaml
+```
 ## ✅ Verification Commands
 
 ```bash

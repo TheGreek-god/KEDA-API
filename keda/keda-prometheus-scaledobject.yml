@@ -2,14 +2,14 @@
 # apiVersion: keda.k8s.io/v1alpha1
 # kind: ScaledObject
 # metadata:
-#   name: prometheus-scaledobject
-#   namespace: default
+#   name: myidentity-scaledobject
+#   namespace: api-app
 #   labels:
 #     deploymentName: myidentity-api
 # spec:
 #   scaleTargetRef:
 #     deploymentName: myidentity-api
-#   pollingInterval: 10  # Optional. Default: 30 seconds
+#   pollingInterval: 30  # Optional. Default: 30 seconds
 #   cooldownPeriod:  15 # Optional. Default: 300 seconds
 #   minReplicaCount: 1   # Optional. Default: 0
 #   maxReplicaCount: 10 # Optional. Default: 100
@@ -17,7 +17,7 @@
 #   - type: prometheus
 #     metadata:
 #       # Required
-#       serverAddress: http://prometheus-operated.monitoring.svc.cluster.local:9090
+#       serverAddress: http://prometheus-service.monitoring.svc.cluster.local:9090
 #       metricName: access_frequency
 #       threshold: '50'
 #       query: sum(rate(node_http_requests_total[2m]))
@@ -32,7 +32,7 @@ spec:
     name: myidentity-api
     kind: Deployment
   pollingInterval: 30
-  cooldownPeriod: 300
+  cooldownPeriod: 15
   minReplicaCount: 1
   maxReplicaCount: 10
   triggers:
@@ -41,4 +41,5 @@ spec:
       serverAddress: http://prometheus-service.monitoring.svc.cluster.local:9090
       metricName: access_frequency
       threshold: '50'
-      query: sum(rate(node_http_requests_total{app="myidentity-api"}[2m]))
+      # query: sum(rate(node_http_requests_total{app="myidentity-api"}[2m]))
+      query: sum(rate(node_http_requests_total[2m]))
